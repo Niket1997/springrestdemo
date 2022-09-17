@@ -1,52 +1,45 @@
 package com.springrest.springrest.services;
 
 import com.springrest.springrest.entities.Course;
-import org.springframework.web.client.HttpClientErrorException;
+import com.springrest.springrest.repositories.interfaces.ICourseRepository;
+import com.springrest.springrest.services.interfaces.ICourseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
-public class CourseService implements com.springrest.springrest.services.interfaces.ICourseService {
-    private Map<Integer, Course> courses;
+@Service
+public class CourseService implements ICourseService {
+//    @Autowired
+    ICourseRepository courseRepository;
 
-    public CourseService() {
-        courses = new HashMap<>();
-        courses.put(1, new Course(1, "Java Spring Tutorial",
-                "This course will teach you about how to work with Spring Boot framework in Java."));
-        courses.put(2, new Course(2, "Golang gRPC Tutorial",
-                "This course will teach you about how to work with gRPC in Golang."));
-        courses.put(3, new Course(3, "English 101",
-                "This course will teach you about basic English."));
-        courses.put(4, new Course(4, "Economy 202",
-                "This course will teach you about intermediate level economics."));
+    @Autowired
+    public CourseService(ICourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
     }
 
     @Override
     public List<Course> getCourses() {
-        return courses.values().stream().toList();
+        return courseRepository.findAll();
     }
 
     @Override
-    public Course getCourse(int courseId) {
-        return courses.getOrDefault(courseId, null);
+    public Course getCourse(long courseId) {
+        return courseRepository.getReferenceById(courseId);
     }
 
     @Override
     public Course addCourse(Course course) {
-        if (courses.containsKey(course.getId())) return null;
-        courses.put(course.getId(), course);
-        return course;
+        return courseRepository.save(course);
     }
 
     @Override
     public Course updateCourse(Course course) {
-        if (!courses.containsKey(course.getId())) return null;
-        courses.put(course.getId(), course);
-        return course;
+        return courseRepository.save(course);
     }
 
     @Override
-    public void deleteCourse(int courseId) throws HttpClientErrorException.BadRequest {
-        if (!courses.containsKey(courseId)) throw new RuntimeException("Course not found!");
-        courses.remove(courseId);
+    public void deleteCourse(long courseId) {
+        courseRepository.deleteById(courseId);
     }
 }

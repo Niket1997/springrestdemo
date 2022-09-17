@@ -1,17 +1,26 @@
 package com.springrest.springrest.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Course {
-    private int id;
+    @Id
+    private Long id;
     private String title;
     private String description;
 
-    public Course(int id, String title, String description) {
+    public Course(long id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;
     }
 
-    public void setId(int id) {
+    public Course() {
+        super();
+    }
+
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -23,7 +32,7 @@ public class Course {
         this.description = description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -33,5 +42,9 @@ public class Course {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
